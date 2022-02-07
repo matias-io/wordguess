@@ -1,4 +1,4 @@
-## Find this project on https://wordguesser.pages.dev/
+## Find this project on https://wordguess.pages.dev/
 
 ## WordGuesser
 
