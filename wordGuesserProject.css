@@ -1,0 +1,49 @@
+body{
+	font-family: Verdana;
+	color: #555555;
+	background-image: url(background.gif);
+	background-repeat: repeat;
+}
+h1 {
+	text-align: center;
+	font-family: courier;
+	font-size: 70px;
+	color: black;
+	border-style: dotted;
+	border-color: black;
+	border-right-width: 2px;
+	border-left-width: 2px;
+
+	}
+
+input, select, textarea{
+	width: 100%;
+}
+button{
+	width: 130px;
+	background-color: #d3d3d3;
+	padding: 10px; 
+}
+p{
+	font-size: 20px
+	width: 80%;
+	margin: auto;
+	text-align: center;
+}
+.form-group{
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+.my-form{
+	padding: 20px;
+	width: 35%;
+	margin: auto;
+}
+.reset {
+	float: right;
+	width: 150px;
+}
+
+#showProgress {
+	font-size: 35pt;
+}

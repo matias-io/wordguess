@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Word Guesser</title>
+	<link rel="stylesheet" type="text/css" href="wordGuesserProject.css">
+</head>
+<body>
+	<h1>Word Guesser Game</h1>
+	<p>Guess the secret word in under 5 tries! Incorrect Words and Letters count to your tries!</p>
+	<div class="my-form" id="myForm">
+		<form>
+			<div class="form-group">
+		    	<label>Enter a character guess.</label>
+		    	<input type="text" id="charGuess" name="charGuess">
+	    	</div>
+	    	<button type="button" id="charGuessButton" onclick="guessCharacter()">Guess Character</button>
+	    	<div class="form-group">
+		    	<label>Think you know the full word? Try!</label>
+		    	<input type="text" id="wordGuess" name="wordGuess">
+	    	</div>
+	    	<button type="button" id="wordGuessButton" onclick="guessWord()">Guess Word</button>
+		</form>
+	</div>
+	<p id="showProgress"></p> 
+	<p id="guessMessage"></p> 
+	<p id="numGuessesLeft"></p>
+
+	<form>
+		<div class="form-group">
+			<button class="reset" type="button" onclick="startGame()">Reset Game?</button> <!-- resets the game with the same work -->
+			<button class="reset" type="button" onClick="window.location.reload();">Try A New Word!</button> <!-- relaods the page to repick a new word-->
+		</div>
+
+	</form>
+	<script>
+		"use strict"
+		var words = ["pineapple","cheese","ham","tomato","mushroom","sauce","box","oven","cook","bake","challenging","seriousness","electricity","conductivity","electromagnetic","zebra"];
+		var secretWord = words[Math.floor(Math.random() * words.length)];  //you may change this to be any word
+		let progress = []; //stores _ for unguessed letter
+		let progressMessage = ""; //used to print off progress
+		let numLetters = secretWord.length;
+		var numGuesses = 5;
+		var guessedLetters = ""; //keeps track of all the letters the user has guessed
+		
+		startGame(); 
+
+
+		//called when the user presses Guess Character button
+		function guessCharacter() {
+			let letter = document.getElementById("charGuess").value;
+			document.getElementById("charGuess").value=""; //remove the character guess from the form
+			
+			//checks if the user has already guessed the letter
+			//if yes, display a message saying user has already guessed letter
+			//then gets out of the function
+			//else if (!((letter.length) > 1)) 
+
+
+			if (letter === " "){ // checks if user inputted a spcae (by accident)
+				document.getElementById("guessMessage").innerHTML = "You cannot guess spaces! Try Again";
+				return;
+				} else{ 
+
+			if ((letter.length) > 1){ // checks if the user put more than 1 characters in their input if not then runs the code
+				document.getElementById("guessMessage").innerHTML = "You cannot guess spaces or more than one chracter in this field! Try Again";
+				return;
+				} else{		
+
+
+			if(checkCharGuessed(letter)) {
+				document.getElementById("guessMessage").innerHTML = "You've already guessed " + letter + ". Try another letter.";
+				return;
+			}
+
+			/*IF the letter is in the secret word,
+			then display message saying letter is in the word
+			find the indices of where the letter is
+			update progress array so that if the letter is in index i, then replace "_" with the letter
+			update progressMessage to be able to show user where the guessed letter appears in the word
+			check if the whole word is guessed, if yes, call gameWon()
+			IF the letter IS NOT in the secret word*/
+			//display a message and call updateProgressMessage()
+			if (secretWord.includes(letter)) {
+				document.getElementById("guessMessage").innerHTML = letter + " is in the word!";
+				let found = findLetterIndices(letter); //array of indices where letter is in secret string
+				for (let j = 0; j < numLetters; j++) {
+					if (found.includes(j)) {
+						progress[j] = letter;
+					};
+				}
+				progressMessage = progress.join(" ")
+				
+				document.getElementById("showProgress").innerHTML = progressMessage;
+				
+				//if the whole word is guessed, then the user wins
+				if (!progress.includes("_")) {
+					gameWon();
+				}
+			} else {
+				document.getElementById("guessMessage").innerHTML = "Nope, guess again!";
+				updateProgressMessage();
+			}
+
+
+		}
+
+		} 
+
+
+		} //end of function
+
+		function guessWord() {
+			/*Question 6*/
+
+			
+			let word = document.getElementById("wordGuess").value;
+			document.getElementById("wordGuess").value="";
+		
+			if ((word.toLowerCase()) === secretWord) { // checks if input is the secret word if so then win!
+
+				let spacedSecretWord = (secretWord.split("")).join(" ");
+				document.getElementById("showProgress").innerHTML = spacedSecretWord;
+
+				gameWon();
+				return;
+			} else {
+
+				updateProgressMessage();
+				return;
+			}
+		}
+
+		function startGame() { // commads needed to start the game
+			/*Question 1*/
+		numGuesses = 5;
+		guessedLetters = ""; 
+		console.log(secretWord);
+		console.log(numGuesses);
+		progress = [];
+		document.getElementById("charGuess").disabled = false;
+		document.getElementById("charGuessButton").disabled = false;
+		document.getElementById("wordGuess").disabled = false;
+		document.getElementById("wordGuessButton").disabled = false;
+		document.getElementById("numGuessesLeft").innerHTML = " ";
+		document.getElementById("guessMessage").innerHTML = " ";
+
+		let blankCounter = Number(secretWord.length); // what displays the underscores/blanks
+		while (blankCounter !== 0){
+			progress.push("_");
+			blankCounter--;
+		}
+
+		progressMessage = progress.join(" ")
+		document.getElementById("showProgress").innerHTML = progressMessage;
+		return;
+
+		}
+
+		function checkCharGuessed(charGuess) {
+			/*Question 2*/
+
+			if (guessedLetters.includes(charGuess) === true){ //checks if the guessed character have already been guessed
+			
+				return true;
+			} else {
+				guessedLetters = guessedLetters + charGuess
+				return false;
+				
+			}
+
+		}
+
+		function findLetterIndices(charGuess) {
+			/*Question 3*/
+
+			let indices = [];
+			let indicescounter = 0;
+			while (indicescounter < Number(secretWord.length)){ //finds at what indexes the input appears in the secret word
+				if (secretWord.charAt(indicescounter) === charGuess) { 
+					indices.push(indicescounter);
+				}
+			
+				indicescounter++
+			}
+			return indices;
+		}
+
+		function gameWon() {
+			/*Question 4*/
+
+			document.getElementById("guessMessage").innerHTML = "Congrats! You just won and guessed the right word: " + secretWord + "! <br> Play Agian?"; // dipsplays winning message and disables inputs
+			document.getElementById("charGuess").disabled = true;
+			document.getElementById("charGuessButton").disabled = true;
+			document.getElementById("wordGuess").disabled = true;
+			document.getElementById("wordGuessButton").disabled = true;
+			document.getElementById("numGuessesLeft").innerHTML = " ";
+			return;
+		}
+
+		function updateProgressMessage() {
+			/*Question 5*/
+//checks if the user has guesses left, if so the lower by 1 if not then display losing code
+			document.getElementById("guessMessage").innerHTML = "Nope, your guess is incorrect!";
+			numGuesses = numGuesses - 1;
+			document.getElementById("numGuessesLeft").innerHTML = "Your have " + numGuesses + " chances to guess incorectly before you lose!";
+			if (numGuesses === 0){
+
+				document.getElementById("guessMessage").innerHTML = "You ran out of guesses!<br> You Lost! The word was: " + secretWord + "<br> GAME OVER, Try Again?";
+				document.getElementById("charGuess").disabled = true;
+				document.getElementById("charGuessButton").disabled = true;
+				document.getElementById("wordGuess").disabled = true;
+				document.getElementById("wordGuessButton").disabled = true;
+				document.getElementById("numGuessesLeft").innerHTML = " ";
+			}
+			return;
+		}
+	</script>
+</body>
+</html>
